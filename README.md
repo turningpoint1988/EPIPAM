@@ -16,13 +16,13 @@ Implementation of "Predicting enhancer-promoter interactions using deep neural n
   ```
   **'command'** has two options, including 'embed' and 'seq'.
  (3) Encoding ChIA-PET datasets by using embeding or one-hot.
- + Usage:
++ Usage:
   ```
   bash /ChIA-PET/Prepare.sh <command>
   ```
   **'command'** has two options, including 'embed' and 'seq'.
   (4) Building soft links to EPIs and ChIA-PET datasets.
-   + Usage:
++ Usage:
   ```
   ln -s /EPIs /EPIPAM_embed/EPIs
   ln -s /ChIA-PET /EPIPAM_embed/ChIA-PET
