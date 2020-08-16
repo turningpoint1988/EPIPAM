@@ -9,18 +9,21 @@ Implementation of "Predicting enhancer-promoter interactions using deep neural n
 
 ## Data preparation
 (1) Downloading hg19.fa from http://hgdownload.soe.ucsc.edu/goldenPath/hg19/bigZips/, and put it into /hg19.
+
 (2) Encoding EPIs datasets by using embeding or one-hot.
 + Usage:
   ```
   bash /EPIs/Prepare.sh <command>
   ```
   **'command'** has two options, including 'embed' and 'seq'.
+  
  (3) Encoding ChIA-PET datasets by using embeding or one-hot.
 + Usage:
   ```
   bash /ChIA-PET/Prepare.sh <command>
   ```
   **'command'** has two options, including 'embed' and 'seq'.
+  
   (4) Building soft links to EPIs and ChIA-PET datasets.
 + Usage:
   ```
