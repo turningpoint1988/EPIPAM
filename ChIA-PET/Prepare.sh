@@ -1,5 +1,6 @@
 #!/usr/bin/bash
 
+command=${1}
 threadnum=4
 tmp="/tmp/$$.fifo"
 mkfifo ${tmp}
@@ -20,8 +21,8 @@ do
 
     fi
     
-    python ./ChIA-PET/DataPrepare_seq.py -c `pwd`/ChIA-PET/$experiment \
-                                         -n $experiment 
+    python ./ChIA-PET/DataPrepare_${command}.py -c `pwd`/ChIA-PET/$experiment \
+                                                -n $experiment 
     
     echo "" >&6
   }&
