@@ -1,19 +1,20 @@
 # EPIPAM
-Implementation of "predicting enhancer-promoter interactions using deep neural network based on positional attention mechanism"
+Implementation of "Predicting enhancer-promoter interactions using deep neural network based on position attention mechanism"
 
 ## Requirements
 
-+ To install Keras with Tensorflow backend, please refer to https://keras.io/#installation. 
-
-+ Python 2.7
++ Pytorch 1.1 
++ Python 3.6
++ CUDA 9.0
 
 ## Data preparation
-Firstly, using encode.sh script to preprocess DNA sequences and their corresponding shape features.
+Firstly, downloading hg19.fa from http://hgdownload.soe.ucsc.edu/goldenPath/hg19/bigZips/
+Secondly, encoding EPIs datasets by using embeding or one-hot.
 + Usage:
   ```
-  bash encode.sh <pbmdata>
+  bash /EPIs/Prepare.sh <command>
   ```
-  **'pbmdata'** denotes the path of storing experimental data, e.g. /yourpath/pbmdata.
+  **<command>** has two options, including 'embed' and 'seq'.
 
 ## Run 
 **Run DeepBind_K or DeepCNN without using DNA shape information**
