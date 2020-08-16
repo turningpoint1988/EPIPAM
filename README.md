@@ -24,7 +24,7 @@ Implementation of "Predicting enhancer-promoter interactions using deep neural n
   ```
   **'command'** has two options, including 'embed' and 'seq'.
   
-  (4) Building soft links to EPIs and ChIA-PET datasets.
+ (4) Building soft links to EPIs and ChIA-PET datasets.
 + Usage:
   ```
   ln -s /EPIs /EPIPAM_embed/EPIs
