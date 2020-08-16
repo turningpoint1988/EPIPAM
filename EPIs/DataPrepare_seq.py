@@ -1,0 +1,221 @@
+import os, sys, argparse
+from Bio import SeqIO
+import pandas as pd
+import numpy as np
+import random
+
+"""
+DataPrepare.py
+
+@author: liwenran
+"""
+
+
+###################### Input #######################
+def get_args():
+    parser = argparse.ArgumentParser(description="pre-process data.")
+    parser.add_argument("-c", dest="cell", type=str, default='')
+    parser.add_argument("-n", dest="name", type=str, default='P-E')
+
+    return parser.parse_args()
+
+
+parse = get_args()
+CELL = parse.cell
+NAME = parse.name
+RESAMPLE_TIME = 20
+RESAMPLE_TIME_T = 1 # 1 0r 20
+PROMOTER_LEN = 2000 #promoter
+ENHANCER_LEN = 3000 #enhancer
+CHROMESIZE = {}
+with open('/path/EPIPAM/hg19/chromsize') as f:
+    for i in f:
+        line_split = i.strip().split()
+        CHROMESIZE[line_split[0]] = int(line_split[1])
+
+
+def split(test_chroms):
+    pairs = pd.read_csv(CELL + '/%s.csv' % NAME)
+    pairs = pairs.iloc[:, [1, 5, 3, 4, 7, 10, 8, 9, 6]]
+    n_sample = pairs.shape[0]
+    test_index = []
+    train_index = []
+    for i in range(n_sample):
+        chr = pairs.iloc[i, 0]
+        if chr in test_chroms:
+            test_index.append(i)
+        else:
+            train_index.append(i)
+    # for train data
+    pairs_train = pairs.iloc[train_index]
+    pairs_train_pos = pairs_train[pairs_train['label'] == 1]
+    pos_num = pairs_train_pos.shape[0]
+    pairs_train_neg = pairs_train[pairs_train['label'] == 0]
+    neg_num = pairs_train_neg.shape[0]
+    if pos_num*RESAMPLE_TIME > neg_num:
+        sample_num = neg_num
+    else:
+        sample_num = pos_num*RESAMPLE_TIME
+    rand_index = list(range(neg_num))
+    np.random.shuffle(rand_index)
+    sample_index = rand_index[:sample_num]
+    pairs_train_neg = pairs_train_neg.iloc[sample_index]
+    pairs_train_filter = pd.concat([pairs_train_pos, pairs_train_neg])
+    # for test
+    pairs_test = pairs.iloc[test_index]
+    pairs_test_pos = pairs_test[pairs_test['label'] == 1]
+    pos_num = pairs_test_pos.shape[0]
+    pairs_test_neg = pairs_test[pairs_test['label'] == 0]
+    neg_num = pairs_test_neg.shape[0]
+    if pos_num * RESAMPLE_TIME_T > neg_num:
+        sample_num = neg_num
+    else:
+        sample_num = pos_num * RESAMPLE_TIME_T
+    rand_index = list(range(neg_num))
+    np.random.shuffle(rand_index)
+    sample_index = rand_index[:sample_num]
+    pairs_test_neg = pairs_test_neg.iloc[sample_index]
+    pairs_test_filter = pd.concat([pairs_test_pos, pairs_test_neg])
+    #save
+    pairs_train_filter.to_csv(CELL + '/pairs_train.csv', index=False)
+    pairs_test_filter.to_csv(CELL + '/pairs_test.csv', index=False)
+
+
+def resize_location(original_location, resize_len, chr):
+    chr_end = CHROMESIZE[chr]
+    start = int(original_location[0])
+    end = int(original_location[1])
+    original_len = end - start
+    if original_len < resize_len:
+        start_update = start - np.ceil((resize_len-original_len)/2)
+    elif original_len > resize_len:
+        start_update = start + np.ceil((original_len - resize_len)/2)
+    else:
+        start_update = start
+    rand_int = np.random.randint(-100, 100)
+    resize_start = int(start_update) - rand_int
+    if resize_start < 1:
+        resize_start = 1
+    resize_end = resize_start + resize_len
+    if resize_end > chr_end:
+        resize_end = chr_end
+        resize_start = resize_end - resize_len
+    return str(resize_start), str(resize_end)
+
+
+def resize_location_fix(original_location, resize_len, chr):
+    chr_end = CHROMESIZE[chr]
+    start = int(original_location[0])
+    end = int(original_location[1])
+    original_len = end - start
+    if original_len < resize_len:
+        start_update = start - np.ceil((resize_len-original_len)/2)
+    elif original_len > resize_len:
+        start_update = start + np.ceil((original_len - resize_len)/2)
+    else:
+        start_update = start
+    resize_start = int(start_update)
+    if resize_start < 1:
+        resize_start = 1
+    resize_end = resize_start + resize_len
+    if resize_end > chr_end:
+        resize_end = chr_end
+        resize_start = resize_end - resize_len
+    return str(resize_start), str(resize_end)
+
+
+def augment(infile, outfile):
+    fout = open(outfile, 'w')
+    file = open(infile)
+    title = file.readline()
+    fout.write(title)
+    for line in file:
+        line = line.strip().split(',')
+        if line[-1] == '0':
+            original_location = (line[1], line[2])
+            resized_location = resize_location_fix(original_location, ENHANCER_LEN, line[0])
+            fout.write(','.join([line[0], resized_location[0], resized_location[1], line[3]]) + ',')
+            original_location = (line[5], line[6])
+            resized_location = resize_location_fix(original_location, PROMOTER_LEN, line[4])
+            fout.write(','.join([line[4], resized_location[0], resized_location[1], line[7], line[-1]]) + '\n')
+        else:
+            for j in range(0, RESAMPLE_TIME):
+                original_location = (line[1], line[2])
+                resized_location = resize_location(original_location, ENHANCER_LEN, line[0])
+                fout.write(','.join([line[0], resized_location[0], resized_location[1], line[3]]) + ',')
+                original_location = (line[5], line[6])
+                resized_location = resize_location(original_location, PROMOTER_LEN, line[4])
+                fout.write(','.join([line[4], resized_location[0], resized_location[1], line[7], line[-1]]) + '\n')
+    file.close()
+    fout.close()
+
+
+def augment_fix(infile, outfile):
+    fout = open(outfile, 'w')
+    file = open(infile)
+    title = file.readline()
+    fout.write(title)
+    for line in file:
+        line = line.strip().split(',')
+        original_location = (line[1], line[2])
+        resized_location = resize_location_fix(original_location, ENHANCER_LEN, line[0])
+        fout.write(','.join([line[0], resized_location[0], resized_location[1], line[3]]) + ',')
+        original_location = (line[5], line[6])
+        resized_location = resize_location_fix(original_location, PROMOTER_LEN, line[4])
+        fout.write(','.join([line[4], resized_location[0], resized_location[1], line[7], line[-1]]) + '\n')
+    file.close()
+    fout.close()
+
+
+def one_hot(sequence_dict, chrom, start, end):
+    seq_dict = {'A':[1, 0, 0, 0], 'G':[0, 1, 0, 0],
+                'C':[0, 0, 1, 0], 'T':[0, 0, 0, 1],
+                'a':[1, 0, 0, 0], 'g':[0, 1, 0, 0],
+                'c':[0, 0, 1, 0], 't':[0, 0, 0, 1]}
+    temp = []
+    seq = str(sequence_dict[chrom].seq[start:end])
+    for c in seq:
+        temp.append(seq_dict.get(c, [0, 0, 0, 0]))
+    return temp
+
+
+def encoding(sequence_dict, filename, stage, cv):
+    file = open(CELL + '/' + filename)
+    file.readline()
+    seqs_1 = []
+    seqs_2 = []
+    label = []
+    for line in file:
+        line = line.strip().split(',')
+        seqs_1.append(one_hot(sequence_dict, line[0], int(line[1]), int(line[2])))
+        seqs_2.append(one_hot(sequence_dict, line[4], int(line[5]), int(line[6])))
+        label.append(int(line[-1]))
+    seqs_1 = np.array(seqs_1, dtype=np.float32)
+    seqs_2 = np.array(seqs_2, dtype=np.float32)
+    label = np.array(label, dtype=np.int32)
+    np.savez(CELL+'/data'+'/%s_%s_fold%d.npz' % (NAME, stage, cv),
+             label=label, enhancer=seqs_1, promoter=seqs_2)
+
+
+def main():
+    """Split for training and testing data"""
+    np.random.seed(1234)
+    index = ['chr' + str(i + 1) for i in range(23)]
+    index[22] = 'chrX'
+    sequence_dict = SeqIO.to_dict(SeqIO.parse(open('/path/EPIPAM/hg19/hg19.fa'), 'fasta'))
+    for cv in range(8):
+        test_chroms = index[cv * 3:(cv + 1) * 3]
+        split(test_chroms)
+        """Augment training data"""
+        infile = CELL + '/pairs_train.csv'
+        outfile = CELL + '/pairs_train_augment.csv'
+        augment(infile, outfile)
+        encoding(sequence_dict, 'pairs_train_augment.csv', 'train', cv)
+        # test data
+        infile = CELL + '/pairs_test.csv'
+        outfile = CELL + '/pairs_test_augment.csv'
+        augment_fix(infile, outfile)
+        encoding(sequence_dict, 'pairs_test_augment.csv', 'test', cv)
+
+"""RUN"""
+if __name__ == "__main__": main()
