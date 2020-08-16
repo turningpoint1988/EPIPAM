@@ -22,7 +22,7 @@ do
     fi
     
     python ./EPIs/DataPrepare_${command}.py -c `pwd`/EPIs/$experiment \
-                                       -n $experiment 
+                                            -n $experiment 
     
     echo "" >&6
   }&
