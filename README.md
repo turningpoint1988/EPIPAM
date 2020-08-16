@@ -8,31 +8,43 @@ Implementation of "Predicting enhancer-promoter interactions using deep neural n
 + CUDA 9.0
 
 ## Data preparation
-Firstly, downloading hg19.fa from http://hgdownload.soe.ucsc.edu/goldenPath/hg19/bigZips/
-Secondly, encoding EPIs datasets by using embeding or one-hot.
+(1) Downloading hg19.fa from http://hgdownload.soe.ucsc.edu/goldenPath/hg19/bigZips/, and put it into /hg19.
+(2) Encoding EPIs datasets by using embeding or one-hot.
 + Usage:
   ```
   bash /EPIs/Prepare.sh <command>
   ```
-  **<command>** has two options, including 'embed' and 'seq'.
+  **'command'** has two options, including 'embed' and 'seq'.
+ (3) Encoding ChIA-PET datasets by using embeding or one-hot.
+ + Usage:
+  ```
+  bash /ChIA-PET/Prepare.sh <command>
+  ```
+  **'command'** has two options, including 'embed' and 'seq'.
+  (4) Building soft links to EPIs and ChIA-PET datasets.
+   + Usage:
+  ```
+  ln -s /EPIs /EPIPAM_embed/EPIs
+  ln -s /ChIA-PET /EPIPAM_embed/ChIA-PET
+  ln -s /EPIs /EPIPAM_onehot/EPIs
+  ln -s /ChIA-PET /EPIPAM_onehot/ChIA-PET
+  
+  ```
 
 ## Run 
-**Run DeepBind_K or DeepCNN without using DNA shape information**
-+ Usage: you can excute run.sh script directly, in which you should modify the python command accordingly, e.g.:
+**Run EPIPAM with embeding encoding**
++ Usage: 
   ```
-  python train_val_test.py -datadir ./pbmdata/$eachTF/data -run 'noshape' -model 'shallow' -batchsize 300 -k 5 -params 30 --train
+  cd /EPIPAM_embed
+  bash train.sh <dataset>
   ```
- The command '-model' can be a choice of {'shollow', 'deep'}, where 'shollow' means DeepBind_K, and 'deep' means DeepCNN.
+ **'dataset'** has two options, including 'EPIs' and 'ChIA-PET'.
  
-**Run DLBSS(shallow) or DLBSS(deep) using DNA shape information**
-+ Usage: you can excute run.sh script directly, in which you should modify the python command accordingly, e.g.:
+**Run EPIPAM with one-hot encoding**
++ Usage: 
   ```
-  python train_val_test_hybrid.py -datadir ./pbmdata/$eachTF/data -run 'shape' -model 'shallow' -batchsize 300 -k 5 -params 30 --train
+  cd /EPIPAM_onehot
+  bash train.sh <dataset>
   ```
-The command '-run' can be a choice of {'shape', 'MGW', 'ProT', 'Roll', 'HelT'}, where 'shape' means using all shape features, 'MGW' means using MGW shape feature, and so on.<br />
-The command '-model' can be a choice of {'shollow', 'deep'}, where 'shollow' means DLBSS(shallow), and 'deep' means 'DLBSS(deep)'.<br />
-**Note that** you should change the ouput path in the run.sh script, the naming rule is: 'model_' + args.model + '_' + args.run.
+ **'dataset'** has two options, including 'EPIs' and 'ChIA-PET'.
 
-+ Type the following for details on other optional arguments:
-	```
-  python train_val_test_hybrid.py -h
