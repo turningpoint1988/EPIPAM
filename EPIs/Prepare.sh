@@ -1,5 +1,6 @@
 #!/usr/bin/bash
 
+command=${1}
 threadnum=3
 tmp="/tmp/$$.fifo"
 mkfifo ${tmp}
@@ -20,7 +21,7 @@ do
 
     fi
     
-    python ./EPIs/DataPrepare_embed.py -c `pwd`/EPIs/$experiment \
+    python ./EPIs/DataPrepare_${command}.py -c `pwd`/EPIs/$experiment \
                                        -n $experiment 
     
     echo "" >&6
@@ -28,4 +29,3 @@ do
 done
 wait
 exec 6>&-
-
