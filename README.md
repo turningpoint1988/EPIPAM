@@ -6,7 +6,9 @@ Implementation of "Predicting enhancer-promoter interactions using deep neural n
 + Pytorch 1.1 
 + Python 3.6
 + CUDA 9.0
-+ biopython
++ Keras 2.2
++ Tensorflow 1.5
++ Python packages: biopython, sklearn
 
 ## Data preparation
 (1) Downloading hg19.fa from http://hgdownload.soe.ucsc.edu/goldenPath/hg19/bigZips/, and put it into /hg19.
