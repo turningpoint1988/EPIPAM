@@ -75,8 +75,8 @@ def main():
         test_loader = data.DataLoader(test_data, batch_size=1, shuffle=False, num_workers=1)
         # # test different combinations
         auc_best = 0; prauc_best = 0; a1_best = 0; a2_best = 0
-        a1_set = [1., 0.8, 0.6, 0.4, 0.2]
-        a2_set = [0., 0.2, 0.4, 0.6, 0.8]
+        a1_set = [1., 0.8, 0.6, 0.4, 0.2, 0.]
+        a2_set = [0., 0.2, 0.4, 0.6, 0.8, 1.]
         for a1, a2 in zip(a1_set, a2_set):
             print("cv={}  a1={}  a2={}".format(cv, a1, a2))
             model = DeepEPIAttention()
