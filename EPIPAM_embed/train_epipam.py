@@ -76,7 +76,7 @@ def main():
         # load the pre-trained embedding weights
         embedding_matrix = np.load(osp.join(osp.dirname(__file__), 'embedding_matrix.npy'))
         embedding_weights = torch.from_numpy(embedding_matrix).float()
-        # we implement many trials for different weight initialization
+        # test different combinations
         auc_best = 0; prauc_best = 0; a1_best = 0; a2_best = 0
         a1_set = [1., 0.8, 0.6, 0.4, 0.2, 0.]
         a2_set = [0., 0.2, 0.4, 0.6, 0.8, 1.]
