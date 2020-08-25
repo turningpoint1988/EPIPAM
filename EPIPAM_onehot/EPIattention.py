@@ -9,7 +9,6 @@ import sys, os
 
 
 class DeepEPIAttention(nn.Module):
-    """FPN for semantic segmentation"""
     def __init__(self):
         super(DeepEPIAttention, self).__init__()
         # for enhancer
