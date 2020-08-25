@@ -9,7 +9,6 @@ import sys, os
 
 
 class DeepEPIAttention(nn.Module):
-    """FPN for semantic segmentation"""
     def __init__(self, embed_weights=None):
         super(DeepEPIAttention, self).__init__()
         # embedding layer
