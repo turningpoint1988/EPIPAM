@@ -3,6 +3,7 @@ import math
 import datetime
 import numpy as np
 import os.path as osp
+from copy import deepcopy
 from sklearn.metrics import roc_auc_score, average_precision_score
 
 import torch
@@ -95,6 +96,6 @@ class Trainer(object):
         if (self.prauc_best + self.auc_best) < (prauc + auc):
             self.auc_best = auc
             self.prauc_best = prauc
-            self.state_best = self.model.state_dict()
+            self.state_best = deepcopy(self.model.state_dict())
         print("auc: {:.3f}\tprauc: {:.3f}\n".format(auc, prauc))
         return auc, prauc, loss_test
