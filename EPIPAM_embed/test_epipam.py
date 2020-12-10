@@ -10,7 +10,7 @@ import os.path as osp
 
 import torch
 from torch.utils import data
-from sklearn.metrics import roc_auc_score, average_precision_score, f1_score
+from sklearn.metrics import roc_auc_score, average_precision_score
 
 # custom functions defined by user
 from EPIattention import DeepEPIAttention
