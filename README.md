@@ -47,6 +47,7 @@ Implementation of "Predicting enhancer-promoter interactions using deep neural n
 + Usage: 
   ```
   cd /EPIPAM_embed
+  mkdir models
   bash train.sh <dataset>
   ```
  **'dataset'** has two options, including 'EPIs' and 'ChIA-PET'.
@@ -55,6 +56,7 @@ Implementation of "Predicting enhancer-promoter interactions using deep neural n
 + Usage: 
   ```
   cd /EPIPAM_onehot
+  mkdir models
   bash train.sh <dataset>
   ```
  **'dataset'** has two options, including 'EPIs' and 'ChIA-PET'.
