@@ -13,6 +13,7 @@ import torch.nn as nn
 import torch.optim as optim
 from torch.utils import data
 
+# custom functions defined by user
 from EPIattention import DeepEPIAttention
 from datasets import EPIDataSetTrain, EPIDataSetTest
 from trainer import Trainer
@@ -33,20 +34,47 @@ def get_args():
     parser.add_argument("-n", dest="name", type=str, default=None,
                         help="The name of a specified data.")
 
-    parser.add_argument("-g", dest="gpu", type=str, default='0',
+    parser.add_argument("-g", dest="gpu", type=str, default='1',
                         help="choose gpu device. eg. '0,1,2' ")
+    parser.add_argument("-s", dest="seed", type=int, default=5,
+                        help="Random seed to have reproducible results.")
+    # Arguments for Adam or SGD optimization
     parser.add_argument("-b", dest="batch_size", type=int, default=1,
                         help="Number of sequences sent to the network in one step.")
     parser.add_argument("-lr", dest="learning_rate", type=float, default=0.01,
-                        help="Base learning rate.")
-    parser.add_argument("-e", dest="max_epoch", type=int, default=1,
+                        help="Base learning rate for training with polynomial decay.")
+    parser.add_argument("-m", dest="momentum", type=float, default=0.9,
+                        help="Momentum for the SGD optimizer.")
+    parser.add_argument("-e", dest="max_epoch", type=int, default=30,
                         help="Number of training steps.")
     parser.add_argument("-w", dest="weight_decay", type=float, default=0.0005,
                         help="Regularisation parameter for L2-loss.")
+    parser.add_argument("-p", dest="power", type=float, default=0.9,
+                        help="Decay parameter to compute the learning rate.")
+
+    parser.add_argument("-r", dest="restore", type=str, default=None,
+                        help="Where restore model parameters from.")
     parser.add_argument("-c", dest="checkpoint", type=str, default='./models/',
                         help="Where to save snapshots of the model.")
 
     return parser.parse_args()
+
+
+def test(model, device, test_loader, checkpoint):
+    """test the performance of the trained model."""
+    model.to(device)
+    model.eval()
+    label_score = open(checkpoint + "/score.txt", "w")
+    for i_batch, sample_batch in enumerate(test_loader):
+        enhancer = sample_batch["enhancer"].float().to(device)
+        promoter = sample_batch["promoter"].float().to(device)
+        label = sample_batch["label"].float().to(device)
+        with torch.no_grad():
+            label_p, dlabel_p = model(enhancer, promoter)
+        p_score = label_p.view(-1).data.cpu().numpy()
+        t_score = label.view(-1).data.cpu().numpy()
+        label_score.write("{}\t{}\n".format(t_score[0], p_score[0]))
+    label_score.close()
 
 
 def main():
@@ -76,13 +104,13 @@ def main():
         # load the pre-trained embedding weights
         embedding_matrix = np.load(osp.join(osp.dirname(__file__), 'embedding_matrix.npy'))
         embedding_weights = torch.from_numpy(embedding_matrix).float()
-        # test different combinations
+        # we implement many trials for different weight initialization
         auc_best = 0; prauc_best = 0; a1_best = 0; a2_best = 0
-        a1_set = [1., 0.8, 0.6, 0.4, 0.2, 0.]
-        a2_set = [0., 0.2, 0.4, 0.6, 0.8, 1.]
+        a1_set = [1., 0.8, 0.6, 0.4, 0.2]
+        a2_set = [0., 0.2, 0.4, 0.6, 0.8]
         for a1, a2 in zip(a1_set, a2_set):
             print("cv={}  a1={}  a2={}".format(cv, a1, a2))
-            model = DeepEPIAttention(embedding_weights)
+            model = DeepEPIAttention(args.restore, embedding_weights)
             total_params = get_n_params(model.parameters())
             print(f'Num params: {total_params:,}')
             optimizer = optim.Adam(model.parameters(),
@@ -120,9 +148,15 @@ def main():
                 }, checkpoint_file)
         f.write("{}\t{}\t{}\t{:.3f}\t{:.3f}\n".format(cv, a1_best, a2_best, auc_best, prauc_best))
         f.flush()
+        if cv == 7:
+            checkpoint_file = osp.join(args.checkpoint, 'model_best%d.pth' % cv)
+            chk = torch.load(checkpoint_file)
+            state_dict = chk['model_state_dict']
+            model = DeepEPIAttention()
+            model.load_state_dict(state_dict)
+            test(model, device, test_loader, args.checkpoint)
     f.close()
 
 
 if __name__ == "__main__":
     main()
-
