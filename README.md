@@ -16,24 +16,28 @@ Implementation of "Predicting enhancer-promoter interactions using deep neural n
 (2) Encoding EPIs datasets by using embeding or one-hot.
 + Usage:
   ```
-  bash /EPIs/Prepare.sh <command>
+  cd /EPIs
+  ln -s /yourpath/EPIPAM/hg19 hg19
+  bash Prepare.sh <command>
   ```
   **'command'** has two options, including 'embed' and 'seq'.
   
  (3) Encoding ChIA-PET datasets by using embeding or one-hot.
 + Usage:
   ```
-  bash /ChIA-PET/Prepare.sh <command>
+  cd /ChIA-PET
+  ln -s /yourpath/EPIPAM/hg19 hg19
+  bash Prepare.sh <command>
   ```
   **'command'** has two options, including 'embed' and 'seq'.
   
  (4) Building soft links to EPIs and ChIA-PET datasets.
 + Usage:
   ```
-  ln -s /EPIs /EPIPAM_embed/EPIs
-  ln -s /ChIA-PET /EPIPAM_embed/ChIA-PET
-  ln -s /EPIs /EPIPAM_onehot/EPIs
-  ln -s /ChIA-PET /EPIPAM_onehot/ChIA-PET
+  ln -s /yourpath/EPIPAM/EPIs /EPIPAM_embed/EPIs
+  ln -s /yourpath/EPIPAM/ChIA-PET /EPIPAM_embed/ChIA-PET
+  ln -s /yourpath/EPIPAM/EPIs /EPIPAM_onehot/EPIs
+  ln -s /yourpath/EPIPAM/ChIA-PET /EPIPAM_onehot/ChIA-PET
   
   ```
 
