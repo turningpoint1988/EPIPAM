@@ -34,12 +34,12 @@ Implementation of "Predicting enhancer-promoter interactions using deep neural n
  (4) Building soft links to EPIs and ChIA-PET datasets.
 + Usage:
   ```
-  ln -s /yourpath/EPIPAM-master/EPIs /EPIPAM_onehot/EPIs
-  ln -s /yourpath/EPIPAM-master/ChIA-PET /EPIPAM_onehot/ChIA-PET
-  ln -s /yourpath/EPIPAM-master/EPIs /EPIVAN/EPIs
-  ln -s /yourpath/EPIPAM-master/ChIA-PET /EPIVAN/ChIA-PET
-  ln -s /yourpath/EPIPAM-master/EPIs /DeepTACT/EPIs
-  ln -s /yourpath/EPIPAM-master/ChIA-PET /DeepTACT/ChIA-PET
+  ln -s /yourpath/EPIPAM-master/EPIs /yourpath/EPIPAM-master/EPIPAM_onehot/EPIs
+  ln -s /yourpath/EPIPAM-master/ChIA-PET /yourpath/EPIPAM-master/EPIPAM_onehot/ChIA-PET
+  ln -s /yourpath/EPIPAM-master/EPIs /yourpath/EPIPAM-master/EPIVAN/EPIs
+  ln -s /yourpath/EPIPAM-master/ChIA-PET /yourpath/EPIPAM-master/EPIVAN/ChIA-PET
+  ln -s /yourpath/EPIPAM-master/EPIs /yourpath/EPIPAM-master/DeepTACT/EPIs
+  ln -s /yourpath/EPIPAM-master/ChIA-PET /yourpath/EPIPAM-master/DeepTACT/ChIA-PET
   ```
 
 ## Run 
