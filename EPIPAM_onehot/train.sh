@@ -11,7 +11,7 @@ do
         continue
     fi
     
-    python train_epiattention.py -d `pwd`/${Data}/${experiment} \
+    python train_epipam.py -d `pwd`/${Data}/${experiment} \
                                -n ${experiment} \
                                -g 0 \
                                -b 100 \
