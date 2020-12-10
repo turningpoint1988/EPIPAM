@@ -11,7 +11,7 @@ do
     echo ""
 done >&6
 
-for experiment in $(ls ./EPIs/ | grep -E "GM12878|HeLa-S3|HUVEC|IMR90|K562|NHEK")
+for experiment in $(ls ./ | grep -E "GM12878|HeLa-S3|HUVEC|IMR90|K562|NHEK")
 do
   read -u6
   {
@@ -21,8 +21,8 @@ do
 
     fi
     
-    python ./EPIs/DataPrepare_${command}.py -c `pwd`/EPIs/$experiment \
-                                            -n $experiment 
+    python DataPrepare_${command}.py -c `pwd`/EPIs/$experiment \
+                                     -n $experiment 
     
     echo "" >&6
   }&
