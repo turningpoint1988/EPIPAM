@@ -58,4 +58,20 @@ Implementation of "Predicting enhancer-promoter interactions using deep neural n
   bash train.sh <dataset>
   ```
  **'dataset'** has two options, including 'EPIs' and 'ChIA-PET'.
+ 
+ **Run EPIVAN**
++ Usage: 
+  ```
+  cd /EPIVAN
+  bash run.sh <dataset>
+  ```
+ **'dataset'** has two options, including 'EPIs' and 'ChIA-PET'.
+ 
+  **Run DeepTACT**
++ Usage: 
+  ```
+  cd /DeepTACT
+  bash run.sh <dataset>
+  ```
+ **'dataset'** has two options, including 'EPIs' and 'ChIA-PET'.
 
