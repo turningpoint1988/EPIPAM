@@ -19,8 +19,8 @@ from keras import initializers
 
 os.environ["CUDA_VISIBLE_DEVICES"]="0"
 
-MAX_LEN_en = 3000  
-MAX_LEN_pr = 2000  
+MAX_LEN_en = 3000  # 1000
+MAX_LEN_pr = 2000  # 1000
 NB_WORDS = 4097
 EMBEDDING_DIM = 100
 embedding_matrix = np.load('embedding_matrix.npy')
