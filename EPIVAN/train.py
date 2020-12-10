@@ -156,7 +156,7 @@ t1 = datetime.now().strftime('%Y-%m-%d-%H:%M:%S')
 index = ['chr'+str(i+1) for i in range(23)]
 index[22] = 'chrX'
 
-file_name = '/home/zqh/EPIVAN/model/%s_record.txt' % name
+file_name = '/home/yourpath/EPIVAN/model/%s_record.txt' % name
 f = open(file_name, 'w')
 f.write('fold\tAUC\tAUPRC\n')
 Data_dir = cell + '/data'
@@ -182,16 +182,16 @@ for cv in range(8):
         if (auc_best + prauc_best) < (auc + prauc):
             auc_best = auc
             prauc_best = prauc
-            model.save_weights("/home/zqh/EPIVAN/model/specificModel/%sModel%d.h5" % (name, cv))
+            model.save_weights("/home/yourpath/EPIVAN/model/specificModel/%sModel%d.h5" % (name, cv))
     f.write("{}\t{:.3f}\t{:.3f}\n".format(cv, auc_best, prauc_best))
     f.flush()
     #####
     if cv == 7:
-        model.load_weights("/home/zqh/EPIVAN/model/specificModel/%sModel%d.h5" % (name, cv))
+        model.load_weights("/home/yourpath/EPIVAN/model/specificModel/%sModel%d.h5" % (name, cv))
         y_pred = model.predict([X_en_te, X_pr_te])
         y_pred = np.asarray([y[0] for y in y_pred])
         y_real = np.asarray([y for y in y_te])
-        with open("/home/zqh/EPIVAN/model/%s_record%d.txt" % (name, cv), 'w') as f1:
+        with open("/home/yourpath/EPIVAN/model/%s_record%d.txt" % (name, cv), 'w') as f1:
             for i in range(len(y_pred)):
                 f1.write('{}\t{}\n'.format(y_real[i], y_pred[i]))
 f.close()
