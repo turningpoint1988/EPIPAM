@@ -36,8 +36,8 @@ def get_args():
 parse = get_args()
 CELL = parse.cell
 NAME = parse.name
-ENHANCER_LEN = 3000
-PROMOTER_LEN = 2000
+ENHANCER_LEN = 3000 # or 1000
+PROMOTER_LEN = 2000 # or 1000
 root = osp.dirname(osp.abspath('__file__'))
 
 
