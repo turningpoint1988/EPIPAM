@@ -21,7 +21,7 @@ NAME = parse.name
 RESAMPLE_TIME = 4
 REGION_LEN = 1000
 OFFSET = 1000
-
+ROOT = os.path.dirname(os.path.abspath('__file__'))
 
 def split(test_chroms):
     pairs = pd.read_csv(CELL+'/pair_intra.csv')
@@ -114,7 +114,7 @@ def main():
     np.random.seed(1234)
     index = ['chr' + str(i + 1) for i in range(23)]
     index[22] = 'chrX'
-    sequence_dict = SeqIO.to_dict(SeqIO.parse(open('/path/EPIPAM/hg19/hg19.fa'), 'fasta'))
+    sequence_dict = SeqIO.to_dict(SeqIO.parse(os.path.join(ROOT, 'hg19/hg19.fa'), 'fasta'))
     for cv in range(8):
         test_chroms = index[cv * 3:(cv + 1) * 3]
         split(test_chroms)
