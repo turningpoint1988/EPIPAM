@@ -1,7 +1,7 @@
 #!/usr/bin/bash
 
 command=${1}
-threadnum=4
+threadnum=2
 tmp="/tmp/$$.fifo"
 mkfifo ${tmp}
 exec 6<> ${tmp}
@@ -11,7 +11,7 @@ do
     echo ""
 done >&6
 
-for experiment in $(ls ./ChIA-PET/ | grep -E "K562Ctcf|K562Pol2|Mcf7Ctcf|Helas3Pol2")
+for experiment in $(ls ./ | grep -E "K562Ctcf|K562Pol2|Mcf7Ctcf|Helas3Pol2")
 do
   read -u6
   {
@@ -21,8 +21,8 @@ do
 
     fi
     
-    python ./ChIA-PET/DataPrepare_${command}.py -c `pwd`/ChIA-PET/$experiment \
-                                                -n $experiment 
+    python DataPrepare_${command}.py -c `pwd`/ChIA-PET/$experiment \
+                                     -n $experiment 
     
     echo "" >&6
   }&
