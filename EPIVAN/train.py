@@ -164,10 +164,10 @@ for cv in range(8):
     print("#######################################")
     print("The current test data is {}".format(test_chroms))
     print("#######################################")
-    train = np.load(Data_dir+'/{}_train_fold{}.npz'.format(name, '_all'))
-    test = np.load(Data_dir + '/{}_test_fold{}.npz'.format(name, '_inter'))
-    X_en_tr, X_pr_tr, y_tr = train['enhancer'], train['promoter'], train['label']
-    X_en_te, X_pr_te, y_te = test['enhancer'], test['promoter'], test['label']
+    train = np.load(Data_dir+'/{}_train_fold{}.npz'.format(name, cv))
+    test = np.load(Data_dir + '/{}_test_fold{}.npz'.format(name, cv))
+    X_en_tr, X_pr_tr, y_tr = train['X_en_tr'], train['X_pr_tr'], train['y_tr']
+    X_en_te, X_pr_te, y_te = test['X_en_te'], test['X_pr_te'], test['y_te']
     auc_best = 0
     prauc_best = 0
     for trail in range(5):
@@ -194,4 +194,3 @@ for cv in range(8):
             for i in range(len(y_pred)):
                 f1.write('{}\t{}\n'.format(y_real[i], y_pred[i]))
 f.close()
-
