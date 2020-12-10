@@ -52,8 +52,6 @@ def get_args():
     parser.add_argument("-p", dest="power", type=float, default=0.9,
                         help="Decay parameter to compute the learning rate.")
 
-    parser.add_argument("-r", dest="restore", type=str, default=None,
-                        help="Where restore model parameters from.")
     parser.add_argument("-c", dest="checkpoint", type=str, default='./models/',
                         help="Where to save snapshots of the model.")
 
@@ -104,13 +102,12 @@ def main():
         # load the pre-trained embedding weights
         embedding_matrix = np.load(osp.join(osp.dirname(__file__), 'embedding_matrix.npy'))
         embedding_weights = torch.from_numpy(embedding_matrix).float()
-        # we implement many trials for different weight initialization
         auc_best = 0; prauc_best = 0; a1_best = 0; a2_best = 0
         a1_set = [1., 0.8, 0.6, 0.4, 0.2]
         a2_set = [0., 0.2, 0.4, 0.6, 0.8]
         for a1, a2 in zip(a1_set, a2_set):
             print("cv={}  a1={}  a2={}".format(cv, a1, a2))
-            model = DeepEPIAttention(args.restore, embedding_weights)
+            model = DeepEPIAttention(embedding_weights)
             total_params = get_n_params(model.parameters())
             print(f'Num params: {total_params:,}')
             optimizer = optim.Adam(model.parameters(),
