@@ -32,12 +32,12 @@ class DeepEPIAttention(nn.Module):
         # for 3-th attention module
         self.pam3 = SPAM(ratio=1)
         # for merging stage1
-        c_in_1 = 384 
+        c_in_1 = 384 # 640(8/4/4)
         self.merge_bn1 = nn.BatchNorm1d(num_features=c_in_1)
         self.linear1 = nn.Linear(c_in_1, 64) 
         self.out_layer1 = nn.Linear(64, 1) 
         # for merging stage1
-        c_in_2 = 643 
+        c_in_2 = 643 # 245 (8/4/4)
         self.merge_bn2 = nn.BatchNorm1d(num_features=c_in_2)
         self.linear2 = nn.Linear(c_in_2, 64)
         self.out_layer2 = nn.Linear(64, 1)
