@@ -49,6 +49,23 @@ def get_args():
     return parser.parse_args()
 
 
+def test(model, device, test_loader, checkpoint):
+    """test the performance of the trained model."""
+    model.to(device)
+    model.eval()
+    label_score = open(checkpoint + "/score.txt", "w")
+    for i_batch, sample_batch in enumerate(test_loader):
+        enhancer = sample_batch["enhancer"].float().to(device)
+        promoter = sample_batch["promoter"].float().to(device)
+        label = sample_batch["label"].float().to(device)
+        with torch.no_grad():
+            label_p, dlabel_p = model(enhancer, promoter)
+        p_score = label_p.view(-1).data.cpu().numpy()
+        t_score = label.view(-1).data.cpu().numpy()
+        label_score.write("{}\t{}\n".format(t_score[0], p_score[0]))
+    label_score.close()
+
+
 def main():
     """Create the model and start the training."""
     args = get_args()
@@ -75,8 +92,8 @@ def main():
         test_loader = data.DataLoader(test_data, batch_size=1, shuffle=False, num_workers=1)
         # # test different combinations
         auc_best = 0; prauc_best = 0; a1_best = 0; a2_best = 0
-        a1_set = [1., 0.8, 0.6, 0.4, 0.2, 0.]
-        a2_set = [0., 0.2, 0.4, 0.6, 0.8, 1.]
+        a1_set = [1., 0.8, 0.6, 0.4, 0.2]
+        a2_set = [0., 0.2, 0.4, 0.6, 0.8]
         for a1, a2 in zip(a1_set, a2_set):
             print("cv={}  a1={}  a2={}".format(cv, a1, a2))
             model = DeepEPIAttention()
@@ -117,6 +134,13 @@ def main():
                 }, checkpoint_file)
         f.write("{}\t{}\t{}\t{:.3f}\t{:.3f}\n".format(cv, a1_best, a2_best, auc_best, prauc_best))
         f.flush()
+        if cv == 7:
+            checkpoint_file = osp.join(args.checkpoint, 'model_best%d.pth' % cv)
+            chk = torch.load(checkpoint_file)
+            state_dict = chk['model_state_dict']
+            model = DeepEPIAttention()
+            model.load_state_dict(state_dict)
+            test(model, device, test_loader, args.checkpoint)
     f.close()
 
 
