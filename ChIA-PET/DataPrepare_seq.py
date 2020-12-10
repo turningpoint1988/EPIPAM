@@ -129,10 +129,6 @@ def main():
         np.savez(CELL + '/data' + '/{}_test_fold{}.npz'.format(NAME, cv),
                  enhancer=x_en_te, promoter=x_pr_te, label=y_te)
 
-    x_en_te, x_pr_te, y_te = encoding(sequence_dict, 'pair_inter.csv')
-    np.savez(CELL + '/data' + '/{}_test_fold_inter.npz'.format(NAME),
-             enhancer=x_en_te, promoter=x_pr_te, label=y_te)
-
 
 """RUN"""
 if __name__ == "__main__": main()
