@@ -20,8 +20,8 @@ def get_args():
 parse = get_args()
 CELL = parse.cell
 NAME = parse.name
-RESAMPLE_TIME = 20
-RESAMPLE_TIME_T = 1 # 1 or 20
+RESAMPLE_TIME = 10
+RESAMPLE_TIME_T = 1 # 1 or 10
 PROMOTER_LEN = 2000 #promoter
 ENHANCER_LEN = 3000 #enhancer
 CHROMESIZE = {}
