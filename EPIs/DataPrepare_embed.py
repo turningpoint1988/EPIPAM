@@ -24,8 +24,9 @@ RESAMPLE_TIME = 10
 RESAMPLE_TIME_T = 1 # 1 or 10
 PROMOTER_LEN = 2000 #promoter
 ENHANCER_LEN = 3000 #enhancer
+ROOT = os.path.dirname(os.path.abspath('__file__'))
 CHROMESIZE = {}
-with open('/path/EPIPAM/hg19/chromsize') as f:
+with open(os.path.join(ROOT, 'hg19/chromsize')) as f:
     for i in f:
         line_split = i.strip().split()
         CHROMESIZE[line_split[0]] = int(line_split[1])
@@ -242,7 +243,7 @@ def main():
     np.random.seed(1234)
     index = ['chr' + str(i + 1) for i in range(23)]
     index[22] = 'chrX'
-    sequence_dict = SeqIO.to_dict(SeqIO.parse(open('/path/EPIPAM/hg19/hg19.fa'), 'fasta'))
+    sequence_dict = SeqIO.to_dict(SeqIO.parse(open(os.path.join(ROOT, 'hg19/hg19.fa')), 'fasta'))
     for cv in range(8):
         test_chroms = index[cv * 3:(cv + 1) * 3]
         split(test_chroms)
