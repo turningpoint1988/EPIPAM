@@ -7,8 +7,9 @@ import argparse
 import random
 import datetime
 import numpy as np
+import os.path as osp
 from sklearn import metrics
-from sklearn.metrics import roc_auc_score, average_precision_score, f1_score
+from sklearn.metrics import roc_auc_score, average_precision_score
 
 from keras.layers import *
 from keras.models import *
@@ -19,16 +20,9 @@ from keras.regularizers import l1, l2
 from keras import initializers
 from keras.callbacks import Callback
 
-"""
-DeepTACT.py
-
-Training DeepTACT for P-P/P-E interactions
-
-@author: liwenran
-"""
 
 ######################## GPU Settings #########################
-os.environ["CUDA_VISIBLE_DEVICES"]="1"
+os.environ["CUDA_VISIBLE_DEVICES"]="0"
 
 ########################### Input #############################
 def get_args():
@@ -44,7 +38,7 @@ CELL = parse.cell
 NAME = parse.name
 ENHANCER_LEN = 3000
 PROMOTER_LEN = 2000
-
+root = osp.dirname(osp.abspath('__file__'))
 
 
 ######################## Initialization #######################
@@ -178,21 +172,21 @@ def bagging(t):
         if (auc_best + prauc_best) < (auc + prauc):
             auc_best = auc
             prauc_best = prauc
-            model.save_weights("/home/yourpath/DeepTACT/model/specificModel/%sModel%d.h5" % (NAME, t))
+            model.save_weights(osp.join(root, 'model/specificModel/%sModel%d.h5' % (NAME, t)))
     ######
     if t == 7:
-        model.load_weights("/home/yourpath/DeepTACT/model/specificModel/%sModel%d.h5" % (NAME, t))
+        model.load_weights(osp.join(root, 'model/specificModel/%sModel%d.h5' % (NAME, t)))
         y_pred = model.predict([X_en_te, X_pr_te])
         y_pred = np.asarray([y[0] for y in y_pred])
         y_real = np.asarray([y for y in y_te])
-        with open("/home/yourpath/DeepTACT/model/%s_record%d.txt" % (NAME, t), 'w') as f:
+        with open(osp.join(root, 'model/%s_record%d.txt' % (NAME, t)), 'w') as f:
             for i in range(len(y_pred)):
                 f.write('{}\t{}\n'.format(y_real[i], y_pred[i]))
     return auc_best, prauc_best
 
 
 def train():
-    file_name = '/home/yourpath/DeepTACT/model/%s_record.txt' % NAME
+    file_name = osp.join(root, 'model/%s_record.txt' % NAME)
     f = open(file_name, 'w')
     f.write('fold\tAUC\tAUPRC\n')
     for t in range(NUM_ENSEMBL):
@@ -203,5 +197,4 @@ def train():
 
 
 if __name__ == '__main__': train()
-
 
