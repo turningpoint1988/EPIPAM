@@ -17,7 +17,7 @@ Implementation of "Predicting enhancer-promoter interactions using deep neural n
 + Usage:
   ```
   cd /EPIs
-  ln -s /yourpath/EPIPAM/hg19 hg19
+  ln -s /yourpath/EPIPAM-master/hg19 hg19
   bash Prepare.sh <command>
   ```
   **'command'** has two options, including 'embed' and 'seq'.
@@ -26,7 +26,7 @@ Implementation of "Predicting enhancer-promoter interactions using deep neural n
 + Usage:
   ```
   cd /ChIA-PET
-  ln -s /yourpath/EPIPAM/hg19 hg19
+  ln -s /yourpath/EPIPAM-master/hg19 hg19
   bash Prepare.sh <command>
   ```
   **'command'** has two options, including 'embed' and 'seq'.
@@ -34,12 +34,12 @@ Implementation of "Predicting enhancer-promoter interactions using deep neural n
  (4) Building soft links to EPIs and ChIA-PET datasets.
 + Usage:
   ```
-  ln -s /yourpath/EPIPAM/EPIs /EPIPAM_onehot/EPIs
-  ln -s /yourpath/EPIPAM/ChIA-PET /EPIPAM_onehot/ChIA-PET
-  ln -s /yourpath/EPIPAM/EPIs /EPIVAN/EPIs
-  ln -s /yourpath/EPIPAM/ChIA-PET /EPIVAN/ChIA-PET
-  ln -s /yourpath/EPIPAM/EPIs /DeepTACT/EPIs
-  ln -s /yourpath/EPIPAM/ChIA-PET /DeepTACT/ChIA-PET
+  ln -s /yourpath/EPIPAM-master/EPIs /EPIPAM_onehot/EPIs
+  ln -s /yourpath/EPIPAM-master/ChIA-PET /EPIPAM_onehot/ChIA-PET
+  ln -s /yourpath/EPIPAM-master/EPIs /EPIVAN/EPIs
+  ln -s /yourpath/EPIPAM-master/ChIA-PET /EPIVAN/ChIA-PET
+  ln -s /yourpath/EPIPAM-master/EPIs /DeepTACT/EPIs
+  ln -s /yourpath/EPIPAM-master/ChIA-PET /DeepTACT/ChIA-PET
   ```
 
 ## Run 
