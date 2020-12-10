@@ -16,12 +16,12 @@ do
   read -u6
   {
     echo "working on $experiment."
-    if [ ! -d ./$experiment/data ]; then
-        mkdir ./$experiment/data
+    if [ ! -d `pwd`/$experiment/data ]; then
+        mkdir `pwd`/$experiment/data
 
     fi
     
-    python DataPrepare_${command}.py -c `pwd`/ChIA-PET/$experiment \
+    python DataPrepare_${command}.py -c `pwd`/$experiment \
                                      -n $experiment 
     
     echo "" >&6
