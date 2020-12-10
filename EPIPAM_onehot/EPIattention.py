@@ -13,18 +13,18 @@ class DeepEPIAttention(nn.Module):
         super(DeepEPIAttention, self).__init__()
         # for enhancer
         self.enhancer_conv1 = nn.Conv1d(in_channels=4, out_channels=64, kernel_size=25)
-        self.enhancer_pool1 = nn.MaxPool1d(kernel_size=8, stride=8)
+        self.enhancer_pool1 = nn.MaxPool1d(kernel_size=10, stride=10)
         self.enhancer_conv2 = nn.Conv1d(in_channels=64, out_channels=64, kernel_size=13)
-        self.enhancer_pool2 = nn.MaxPool1d(kernel_size=4, stride=4)
+        self.enhancer_pool2 = nn.MaxPool1d(kernel_size=10, stride=10)
         self.enhancer_conv3 = nn.Conv1d(in_channels=64, out_channels=64, kernel_size=7)
-        self.enhancer_pool3 = nn.MaxPool1d(kernel_size=4, stride=4)
+        self.enhancer_pool3 = nn.MaxPool1d(kernel_size=5, stride=5)
         # for promoter
         self.promoter_conv1 = nn.Conv1d(in_channels=4, out_channels=64, kernel_size=25)
-        self.promoter_pool1 = nn.MaxPool1d(kernel_size=8, stride=8)
+        self.promoter_pool1 = nn.MaxPool1d(kernel_size=10, stride=10)
         self.promoter_conv2 = nn.Conv1d(in_channels=64, out_channels=64, kernel_size=13)
-        self.promoter_pool2 = nn.MaxPool1d(kernel_size=4, stride=4)
+        self.promoter_pool2 = nn.MaxPool1d(kernel_size=10, stride=10)
         self.promoter_conv3 = nn.Conv1d(in_channels=64, out_channels=64, kernel_size=7)
-        self.promoter_pool3 = nn.MaxPool1d(kernel_size=4, stride=4)
+        self.promoter_pool3 = nn.MaxPool1d(kernel_size=5, stride=5)
         # for 1-th attention module
         self.pam1 = SPAM(ratio=0.01)
         # for 2-th attention module
@@ -32,12 +32,12 @@ class DeepEPIAttention(nn.Module):
         # for 3-th attention module
         self.pam3 = SPAM(ratio=1)
         # for merging stage1
-        c_in_1 = 640 
+        c_in_1 = 384 
         self.merge_bn1 = nn.BatchNorm1d(num_features=c_in_1)
         self.linear1 = nn.Linear(c_in_1, 64) 
         self.out_layer1 = nn.Linear(64, 1) 
         # for merging stage1
-        c_in_2 = 245 
+        c_in_2 = 643 
         self.merge_bn2 = nn.BatchNorm1d(num_features=c_in_2)
         self.linear2 = nn.Linear(c_in_2, 64)
         self.out_layer2 = nn.Linear(64, 1)
